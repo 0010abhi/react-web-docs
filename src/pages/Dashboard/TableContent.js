@@ -9,7 +9,8 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { Button } from "@material-ui/core";
 import { storage } from "../Firebase";
-import { Document } from "react-pdf";
+import { useHistory } from "react-router-dom";
+// import { Document } from "react-pdf";
 
 const useStyles = makeStyles({
   table: {
@@ -20,6 +21,7 @@ const useStyles = makeStyles({
 export default function TableContent() {
   const classes = useStyles();
   const [uploadedFiles, setuploadedFiles] = useState([]);
+  const history = useHistory();
   const [showPdf, setShowPdf] = useState(false);
   // const [url, setUrl] = useState('');
 
@@ -68,6 +70,7 @@ export default function TableContent() {
   // }
 
   function editDetails(fileName) {
+    history.push('/editdetail');
     // api hit for backend
     const base64Str = storage
       .ref(fileName).toString("base64")
@@ -81,7 +84,6 @@ export default function TableContent() {
       //   // );
       //   // setShowPdf(true);
       // });
-    
     
   }
 
