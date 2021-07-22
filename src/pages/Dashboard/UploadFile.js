@@ -1,13 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@material-ui/core";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import { storage } from "../Firebase";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import {database} from '../Firebase';
+import TableContent from "./TableContent";
 
 export default function UploadFile() {
   const [pdfAsFile, setPdfAsFile] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const [type, setType] = useState("");
-  // type
+  const [uploadedFiles, setUploadedFiles] = useState({});
+  const databaseRef = database.ref('/');
+
+  useEffect(() => {
+    databaseRef.on("value", (snapshot) => {
+      const data = snapshot.val();
+      console.log('data', data);
+      setUploadedFiles({...data});
+    })
+    // return () => {
+    //   effect
+    // };
+  }, [])
+
+  const handleType = (event) => {
+    setType(event.target.value);
+  };
 
   const handleChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -22,49 +42,26 @@ export default function UploadFile() {
     console.log(pdfAsFile)
     formData.append('report_file', pdfAsFile);
     console.log(formData)
-    // const name = `file_${new Date().getMilliseconds()}`;
-    // const uploadTask = storage.ref(name).put(pdfAsFile);
-    // uploadTask.on(
-    //   "state_changed",
-    //   (snapShot) => {
-    //     //takes a snap shot of the process as it is happening
-    //     console.log(snapShot);
-    //   },
-    //   (err) => {
-    //     setisLoading(false);
-    //     alert(err);
-    //   },
-    //   () => {
-    //     setisLoading(false);
-    //     alert("File Uploaded Successfully");
-    //     uploadTask.snapshot.ref
-    //     .getDownloadURL()
-    //     .then((url) => {
-    //       const data = {
-    //         name: name,
-    //         url: url,
-    //         type: type,
-    //       };
-    //       // save to db
-    //     });
-    //   }
-    // );
     fetch(
-			'https://30a712d7d785.ngrok.io/upload',
+			'https://30a712d7d785.ngrok.io/upload/' + type,
 			{
 				method: 'POST',
 				body: formData,
         headers:{
           mode: "no-cors",
-          'Access-Control-Allow-Origin':'*',
-          "Content-Type": "multipart/form-data",
+          // 'Access-Control-Allow-Origin':'*',
+          // "Content-Type": "multipart/form-data",
         }
 			}
 		)
-			// .then((response) => response.json())
+			.then((response) => {
+        console.log('response pre block', response);
+        return response.json()
+      })
 			.then((result) => {
         setisLoading(false);
 				console.log('Success:', result);
+        databaseRef.push(result);
 			},(error) => {
         setisLoading(false);
 				console.log('Error:', error);
@@ -77,6 +74,12 @@ export default function UploadFile() {
 
   return (
     <div>
+    <div>
+      <RadioGroup value={type} onChange={handleType}>
+        <FormControlLabel value="1" control={<Radio />} label="Type-1" />
+        <FormControlLabel value="2" control={<Radio />} label="Type-2" />
+      </RadioGroup>
+    </div>
       <label>
         <input
           disabled={isLoading}
@@ -114,6 +117,7 @@ export default function UploadFile() {
           )}
         </Button>
       </div>
+      <TableContent data={uploadedFiles} />
     </div>
   );
 }
