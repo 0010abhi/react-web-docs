@@ -9,6 +9,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { Button } from "@material-ui/core";
 import { storage } from "../Firebase";
+import { Document } from "react-pdf";
 
 const useStyles = makeStyles({
   table: {
@@ -19,6 +20,8 @@ const useStyles = makeStyles({
 export default function TableContent() {
   const classes = useStyles();
   const [uploadedFiles, setuploadedFiles] = useState([]);
+  const [showPdf, setShowPdf] = useState(false);
+  const [url, setUrl] = useState('');
 
   useEffect(() => {
     listAll();
@@ -39,6 +42,17 @@ export default function TableContent() {
       })
       .catch((err) => {
         console.log("err", err);
+      });
+  }
+
+  function openPdf(fileName) {
+    storage
+      .ref(fileName)
+      .getDownloadURL()
+      .then((url) => {
+        setUrl(url);
+        window.open(url)
+        // setShowPdf(true);
       });
   }
 
@@ -96,6 +110,9 @@ export default function TableContent() {
                       fontSize: "15px",
                       textTransform: "none",
                     }}
+                    onClick={() => {
+                      openPdf(datum.name);
+                    }}
                   >
                     View Details
                   </Button>
@@ -122,6 +139,17 @@ export default function TableContent() {
           </TableBody>
         </Table>
       </TableContainer>
+      {showPdf && (
+        <div>
+          <Document
+            file={url}
+            // onLoadSuccess={onDocumentLoadSuccess}
+          >
+            {/* <Page pageNumber={pageNumber} /> */}
+          </Document>
+          {/* <p>Page {pageNumber} of {numPages}</p> */}
+        </div>
+      )}
     </div>
   );
 }
