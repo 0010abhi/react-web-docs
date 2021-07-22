@@ -9,7 +9,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { Button } from "@material-ui/core";
 // import { storage } from "../Firebase";
-// import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 // import { Document } from "react-pdf";
 
 const useStyles = makeStyles({
@@ -21,7 +21,7 @@ const useStyles = makeStyles({
 export default function TableContent(props) {
   const classes = useStyles();
   // const [uploadedFiles, setuploadedFiles] = useState([]);
-  // const history = useHistory();
+  const history = useHistory();
   // const [showPdf, setShowPdf] = useState(false);
   // const [url, setUrl] = useState('');
 
@@ -97,7 +97,8 @@ export default function TableContent(props) {
   //   });
   // }
 
-  function editDetails(data) {
+  function editDetails(data, firebaseUniqueKey) {
+    history.push(`/edit-detail/${firebaseUniqueKey}`);
     let URL = "https://30a712d7d785.ngrok.io/";
     if (data.fileType === "1") {
       URL += "parser-type-one";
@@ -211,7 +212,7 @@ export default function TableContent(props) {
                       textTransform: "none",
                     }}
                     onClick={() => {
-                      editDetails(props.data[datum]);
+                      editDetails(props.data[datum], datum);
                     }}
                   >
                     Edit Details

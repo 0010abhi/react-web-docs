@@ -61,7 +61,10 @@ export default function UploadFile() {
 			.then((result) => {
         setisLoading(false);
 				console.log('Success:', result);
-        databaseRef.push(result);
+        databaseRef.push({
+          ...result,
+          createdAt: new Date()
+        });
 			},(error) => {
         setisLoading(false);
 				console.log('Error:', error);

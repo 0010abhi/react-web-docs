@@ -9,7 +9,7 @@ const NAV_CONST = [
     component: Dashboard,
   },
   {
-    path: "/editdetail",
+    path: "/edit-detail/:id",
     component: EditDetail,
   },
 ];
