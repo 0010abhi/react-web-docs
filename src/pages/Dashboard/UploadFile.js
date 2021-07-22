@@ -6,6 +6,8 @@ import { storage } from "../Firebase";
 export default function UploadFile() {
   const [pdfAsFile, setPdfAsFile] = useState("");
   const [isLoading, setisLoading] = useState(false);
+  const [type, setType] = useState('');
+  // type
 
   const handleChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -16,8 +18,9 @@ export default function UploadFile() {
   //connection with firebase storage after click on upload button pdf pass
   const handleUpload = () => {
     setisLoading(true);
+    const name = `file_${new Date().getMilliseconds()}`;
     const uploadTask = storage
-      .ref(`file_${new Date().getMilliseconds()}`)
+      .ref(name)
       .put(pdfAsFile);
     uploadTask.on(
       "state_changed",
@@ -32,11 +35,16 @@ export default function UploadFile() {
       () => {
         setisLoading(false);
         alert("File Uploaded Successfully");
-        // uploadTask.snapshot.ref
-        //   .getDownloadURL()
-        //   .then(url => {
-        //     setUrl(url);
-        //  })
+        uploadTask.snapshot.ref
+          .getDownloadURL()
+          .then(url => {
+            const data = {
+              name: name,
+              url: url,
+              type: type
+            };
+            // save to db
+         })
       }
     );
   };

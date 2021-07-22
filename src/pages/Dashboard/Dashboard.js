@@ -8,7 +8,7 @@ export default function Dashboard() {
     <div>
       <AttachFile />
       <TableContent />
-      <InputBox />
+      {/* <InputBox /> */}
     </div>
   );
 }
