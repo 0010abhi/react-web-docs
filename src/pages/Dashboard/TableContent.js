@@ -21,13 +21,14 @@ export default function TableContent() {
   const classes = useStyles();
   const [uploadedFiles, setuploadedFiles] = useState([]);
   const [showPdf, setShowPdf] = useState(false);
-  const [url, setUrl] = useState('');
+  // const [url, setUrl] = useState('');
 
   useEffect(() => {
     listAll();
   }, []);
 
   //list all name of file present
+  // get data from database
   function listAll() {
     const listRef = storage.ref().child("");
     listRef
@@ -50,10 +51,37 @@ export default function TableContent() {
       .ref(fileName)
       .getDownloadURL()
       .then((url) => {
-        setUrl(url);
-        window.open(url)
+        // setUrl(url);
+        window.open(url);
         // setShowPdf(true);
       });
+  }
+
+  // function getBase64(file) {
+  //   return new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  //     reader.readAsDataURL(file);
+  //     reader.onload = () => resolve(reader.result);
+  //     reader.onerror = error => reject(error);
+  //   });
+  // }
+
+  function editDetails(fileName) {
+    // api hit for backend
+    const base64Str = storage
+      .ref(fileName).toString("base64")
+      console.log('base64Str', base64Str);
+      // .getDownloadURL()
+      // .then((url) => {
+      //   // setUrl(url);
+      //   // window.open(url);
+      //   // getBase64(url).then(
+      //   //   data => console.log(data)
+      //   // );
+      //   // setShowPdf(true);
+      // });
+    
+    
   }
 
   return (
@@ -130,6 +158,9 @@ export default function TableContent() {
                       border: "1px solid #3254CB",
                       textTransform: "none",
                     }}
+                    onClick={() => {
+                      editDetails(datum.name);
+                    }}
                   >
                     Edit Details
                   </Button>
@@ -139,17 +170,17 @@ export default function TableContent() {
           </TableBody>
         </Table>
       </TableContainer>
-      {showPdf && (
+      {/*  (
         <div>
           <Document
             file={url}
-            // onLoadSuccess={onDocumentLoadSuccess}
+            onLoadSuccess={onDocumentLoadSuccess}
           >
-            {/* <Page pageNumber={pageNumber} /> */}
+            <Page pageNumber={pageNumber} />
           </Document>
-          {/* <p>Page {pageNumber} of {numPages}</p> */}
+          <p>Page {pageNumber} of {numPages}</p>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
