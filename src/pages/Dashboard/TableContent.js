@@ -9,6 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { Button } from '@material-ui/core';
 import Checkbox from '@material-ui/core/Checkbox';
+import PdfViewer from './PdfViewer';
 // import { useState } from 'react';
 
 const useStyles = makeStyles( {
@@ -53,6 +54,10 @@ export default function TableContent(){
         }
       ]
 
+  function handlePdf(){
+    <PdfViewer />
+  }
+
 return(
 <div style={{marginTop:'40px', marginLeft:'50px', marginRight:'50px', background: '#FFFFFF',
 boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.15)',
@@ -96,7 +101,7 @@ borderRadius: '10px'}}>
               <TableCell align="center">{row.upload}</TableCell>
               <TableCell align="center">{row.business}</TableCell>
               <TableCell align="center">
-                  <Button style={{postion:'absolute', width:'110px', height:'30px', background:'#3254CB', borderRadius:'20px', color:'#FFFFFF', fontSize:'15px', textTransform: 'none'}}>
+                  <Button onClick={handlePdf} style={{postion:'absolute', width:'110px', height:'30px', background:'#3254CB', borderRadius:'20px', color:'#FFFFFF', fontSize:'15px', textTransform: 'none'}}>
                       View Details
                   </Button>
               </TableCell>
