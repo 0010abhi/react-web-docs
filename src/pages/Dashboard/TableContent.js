@@ -163,8 +163,8 @@ export default function TableContent(props) {
             </TableCell> */}
               {/* <TableCell align="center">Customer ID</TableCell> */}
               <TableCell align="center">Name</TableCell>
-              {/* <TableCell align="center">Upload Date & Time</TableCell> */}
-              {/* <TableCell align="center">Business Type</TableCell>   */}
+              <TableCell align="center">Type</TableCell>  
+              <TableCell align="center">Created At</TableCell>
               <TableCell align="center"></TableCell>
               <TableCell align="center"></TableCell>
             </TableRow>
