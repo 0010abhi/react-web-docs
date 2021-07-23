@@ -1,11 +1,12 @@
-import React from "react";
-import AttachFile from "./AttachFile";
+import React, { useState } from "react";
+import UploadFile from "./UploadFile";
 
 
 export default function Dashboard() {
+  const [editDetailData, setEditDetailData] = useState({});
   return (
     <div>
-      <AttachFile />
+      <UploadFile editDetailData={editDetailData} setEditDetailData={setEditDetailData} />
     </div>
   );
 }

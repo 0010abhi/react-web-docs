@@ -1,5 +1,5 @@
 import { Button } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { database } from "../Firebase";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -9,8 +9,8 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import { PARS_1_DATA } from "../../metadata/parser-response-1";
-import TextField from '@material-ui/core/TextField';
+import TextField from "@material-ui/core/TextField";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   table: {
@@ -19,12 +19,13 @@ const useStyles = makeStyles({
 });
 export default function EditDetail(props) {
   const classes = useStyles();
-  console.log("props.match", props.match.params.id);
+  const history = useHistory();
   const databaseRef = database.ref("/" + props.match.params.id);
-  console.log("hey", databaseRef);
+  const [parserData, setParserData] = useState(props.location.state.data[0]);
 
-  const [parserData, setParserData] = useState(PARS_1_DATA[0]);
-  console.log("pars", parserData, typeof parserData);
+  function goBack() {
+    history.goBack();
+  }
 
   function updateDatabase() {
     databaseRef.on("value", (snapshot) => {
@@ -65,12 +66,17 @@ export default function EditDetail(props) {
           <TableBody>
             {parserData.body.map((datum, index) => (
               <TableRow key={index}>
-                {Object.keys(datum).map((dataKey, dataKeyindex) => (
-                  <TableCell key={dataKeyindex} align="center">
-                    {/* {datum[dataKey]} */}
-                    {
-                      dataKeyindex > 1 ? <TextField label="Outlined" value={datum[dataKey]} variant="outlined" /> : <span>{datum[dataKey]}</span>
-                    }
+                {parserData.header.map((headerDatum, headerIndex) => (
+                  <TableCell key={headerIndex} align="center">
+                    {headerIndex > 1 ? (
+                      <TextField
+                        // label="Outlined"
+                        value={datum[headerDatum.key]}
+                        variant="outlined"
+                      />
+                    ) : (
+                      <span>{datum[headerDatum.key]}</span>
+                    )}
                   </TableCell>
                 ))}
               </TableRow>
@@ -78,9 +84,8 @@ export default function EditDetail(props) {
           </TableBody>
         </Table>
       </TableContainer>
-
       <div>
-        <Button onClick={updateDatabase} variant="outlined" color="primary">
+        <Button onClick={goBack} variant="outlined" color="primary">
           Cancel
         </Button>
         <Button onClick={updateDatabase} variant="contained" color="primary">
