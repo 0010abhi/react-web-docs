@@ -8,7 +8,7 @@ import { database } from "../Firebase";
 import TableContent from "./TableContent";
 
 export default function UploadFile(props) {
-  const {setEditDetailData} = props;
+  const { setEditDetailData } = props;
   const [pdfAsFile, setPdfAsFile] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const [type, setType] = useState("");
@@ -39,7 +39,7 @@ export default function UploadFile(props) {
     const formData = new FormData();
     formData.append("report_file", pdfAsFile);
 
-    fetch("https://cc0c0c65f452.ngrok.io/upload/" + type, {
+    fetch("http://127.0.0.1:5000//upload/" + type, {
       method: "POST",
       body: formData,
       headers: {
@@ -68,18 +68,9 @@ export default function UploadFile(props) {
   }
 
   return (
-    <div>
-      <div
-        style={{
-          minHeight: "150px",
-          marginTop: "60px",
-          background: "#FFFFFF",
-          boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.15)",
-          borderRadius: "12px",
-        }}
-      >
-        Upload New File Here (Pdf Format Only)
-      </div>
+    <>
+    <div style={{display: 'flex', margin: '15px', justifyContent: 'flex-start', padding: '15px', border: '1px solid #f9f9f9', flexDirection: 'column', borderRadius: '12px'}}>
+      <div>Upload New File Here (Pdf Format Only)</div>
       <div>
         <RadioGroup value={type} onChange={handleType}>
           <FormControlLabel
@@ -94,6 +85,7 @@ export default function UploadFile(props) {
           />
         </RadioGroup>
       </div>
+      <div>
       <label>
         <input
           disabled={isLoading}
@@ -103,7 +95,8 @@ export default function UploadFile(props) {
           onChange={handleChange}
         />
       </label>
-      <div style={{ marginRight: "200px" }}>
+      </div>
+      <div>
         <Button
           disabled={isLoading}
           component="span"
@@ -131,7 +124,11 @@ export default function UploadFile(props) {
           )}
         </Button>
       </div>
-      <TableContent setEditDetailData={setEditDetailData} data={uploadedFiles} />
     </div>
+    <TableContent
+        setEditDetailData={setEditDetailData}
+        data={uploadedFiles}
+      />
+      </>
   );
 }
