@@ -8,7 +8,6 @@ import { database } from "../Firebase";
 import TableContent from "./TableContent";
 
 export default function UploadFile(props) {
-  const { setEditDetailData } = props;
   const [pdfAsFile, setPdfAsFile] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const [type, setType] = useState("");
@@ -69,10 +68,10 @@ export default function UploadFile(props) {
 
   return (
     <>
-    <div style={{display: 'flex', margin: '15px', justifyContent: 'flex-start', padding: '15px', border: '1px solid #f9f9f9', flexDirection: 'column', borderRadius: '12px'}}>
+    <div style={{display: 'flex', margin: '25px', justifyContent: 'flex-start', border: '1px solid black', padding: '25px', flexDirection: 'column', borderRadius: '12px'}}>
       <div>Upload New File Here (Pdf Format Only)</div>
       <div>
-        <RadioGroup value={type} onChange={handleType}>
+        <RadioGroup style={{display: 'flex', flexDirection: 'row'}} value={type} onChange={handleType}>
           <FormControlLabel
             value="1"
             control={<Radio />}
@@ -126,7 +125,6 @@ export default function UploadFile(props) {
       </div>
     </div>
     <TableContent
-        setEditDetailData={setEditDetailData}
         data={uploadedFiles}
       />
       </>

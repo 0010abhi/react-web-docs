@@ -10,7 +10,6 @@ import Paper from "@material-ui/core/Paper";
 import { Button } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
-
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
@@ -18,7 +17,6 @@ const useStyles = makeStyles({
 });
 
 export default function TableContent(props) {
-  const {setEditDetailData} = props;
   const classes = useStyles();
   const history = useHistory();
 
@@ -27,9 +25,9 @@ export default function TableContent(props) {
   }
 
   /**
-   * 
-   * @param {*} data 
-   * @param {*} firebaseUniqueKey 
+   *
+   * @param {*} data
+   * @param {*} firebaseUniqueKey
    */
   function editDetails(data, firebaseUniqueKey) {
     // ng_rok_url
@@ -41,7 +39,7 @@ export default function TableContent(props) {
       URL += "parser-type-two";
     }
 
-    // 
+    //
     fetch(URL, {
       method: "POST",
       body: JSON.stringify({ gcsUrl: data.gcsUrl }),
@@ -59,10 +57,12 @@ export default function TableContent(props) {
           // setisLoading(false);
           console.log("Success:", result);
           // setEditDetailData(result)
-          history.push(`/edit-detail/${firebaseUniqueKey}`, { data : result});
+          history.push(`/edit-detail/${firebaseUniqueKey}`, {
+            data: result,
+            fileType: data.fileType,
+          });
           // Update Database with parser
           //originalData: originalData
-
         },
         (error) => {
           // setisLoading(false);
@@ -87,11 +87,9 @@ export default function TableContent(props) {
       }}
     >
       <TableContainer component={Paper}>
+        <div style={{padding: '15px', display: 'flex', justifyContent: 'flex-start', fontSize: '24px', fontWeight: '600'}}>Recent Uploaded Files</div>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
-            <div style={{ marginTop: "20px", marginBottom: "20px" }}>
-              Recent Uploaded Files
-            </div>
             <TableRow style={{ background: "#E8EDFF" }}>
               <TableCell align="center">Name</TableCell>
               <TableCell align="center">Type</TableCell>
@@ -109,7 +107,9 @@ export default function TableContent(props) {
                   {".pdf"}
                 </TableCell>
                 <TableCell align="center">
-                  {props.data[datum].fileType}
+                  {props.data[datum].fileType === "1"
+                    ? "ATB Financial"
+                    : "ATB Matser Card"}
                 </TableCell>
                 <TableCell align="center">
                   {props.data[datum].createdAt}
