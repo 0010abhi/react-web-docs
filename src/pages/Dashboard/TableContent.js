@@ -1,5 +1,4 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -9,16 +8,12 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { Button } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
-
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
-});
+import { dashboardStyles } from "./style";
 
 export default function TableContent(props) {
-  const classes = useStyles();
+  const classes = dashboardStyles();
   const history = useHistory();
+  const {setEditDetailLoading}= props;
 
   function openPdf(url) {
     window.open(url);
@@ -31,7 +26,8 @@ export default function TableContent(props) {
    */
   function editDetails(data, firebaseUniqueKey) {
     // ng_rok_url
-    let URL = "https://464b4e3a3986.ngrok.io/";
+    setEditDetailLoading(true);
+    let URL = "https://364e5c6ae474.ngrok.io/";
     // conditional end point based on file type by value
     if (data.fileType === "1") {
       URL += "parser-type-one";
@@ -54,7 +50,7 @@ export default function TableContent(props) {
       })
       .then(
         (result) => {
-          // setisLoading(false);
+          setEditDetailLoading(false);
           console.log("Success:", result);
           // setEditDetailData(result)
           history.push(`/edit-detail/${firebaseUniqueKey}`, {
@@ -65,32 +61,25 @@ export default function TableContent(props) {
           //originalData: originalData
         },
         (error) => {
-          // setisLoading(false);
+          setEditDetailLoading(false);
           console.log("Error:", error);
         }
       )
       .catch((error) => {
-        // setisLoading(false);
+        setEditDetailLoading(false);
         console.error("Error:", error);
       });
   }
 
   return (
     <div
-      style={{
-        marginTop: "40px",
-        marginLeft: "50px",
-        marginRight: "50px",
-        background: "#FFFFFF",
-        boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.15)",
-        borderRadius: "10px",
-      }}
+    className={classes.tableMain}
     >
       <TableContainer component={Paper}>
-        <div style={{padding: '15px', display: 'flex', justifyContent: 'flex-start', fontSize: '24px', fontWeight: '600'}}>Recent Uploaded Files</div>
+        <div className={classes.tableContainer} >Recent Uploaded Files</div>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
-            <TableRow style={{ background: "#E8EDFF" }}>
+            <TableRow className={classes.tableRowHeader}>
               <TableCell align="center">Name</TableCell>
               <TableCell align="center">Type</TableCell>
               <TableCell align="center">Created at</TableCell>
@@ -119,16 +108,7 @@ export default function TableContent(props) {
                 </TableCell>
                 <TableCell align="center">
                   <Button
-                    style={{
-                      postion: "absolute",
-                      width: "110px",
-                      height: "30px",
-                      background: "#3254CB",
-                      borderRadius: "20px",
-                      color: "#FFFFFF",
-                      fontSize: "15px",
-                      textTransform: "none",
-                    }}
+                    className={classes.tableView}
                     onClick={() => {
                       openPdf(props.data[datum].publicUrl);
                     }}
@@ -136,17 +116,7 @@ export default function TableContent(props) {
                     View Details
                   </Button>
                   <Button
-                    style={{
-                      postion: "absolute",
-                      width: "110px",
-                      height: "30px",
-                      background: "#FFFFFF",
-                      borderRadius: "20px",
-                      color: "#3254CB",
-                      fontSize: "15px",
-                      border: "1px solid #3254CB",
-                      textTransform: "none",
-                    }}
+                    className={classes.tableEdit}
                     onClick={() => {
                       editDetails(props.data[datum], datum);
                     }}

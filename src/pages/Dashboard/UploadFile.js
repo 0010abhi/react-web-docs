@@ -6,10 +6,13 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { database } from "../Firebase";
 import TableContent from "./TableContent";
+import { dashboardStyles } from "./style";
 
 export default function UploadFile(props) {
+  const {setUploadFileLoading, setEditDetailLoading} = props;
+  const classes = dashboardStyles();
   const [pdfAsFile, setPdfAsFile] = useState("");
-  const [isLoading, setisLoading] = useState(false);
+  // const [isLoading, setUploadFileLoading] = useState(false);
   const [type, setType] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState({});
   const databaseRef = database.ref("/");
@@ -33,12 +36,12 @@ export default function UploadFile(props) {
 
   //connection with firebase storage after click on upload button pdf pass
   function handleUpload() {
-    setisLoading(true);
+    setUploadFileLoading(true);
 
     const formData = new FormData();
     formData.append("report_file", pdfAsFile);
 
-    fetch("https://464b4e3a3986.ngrok.io/upload/" + type, {
+    fetch("https://364e5c6ae474.ngrok.io/upload/" + type, {
       method: "POST",
       body: formData,
       headers: {
@@ -51,27 +54,27 @@ export default function UploadFile(props) {
       })
       .then(
         (result) => {
-          setisLoading(false);
+          setUploadFileLoading(false);
           console.log("Success:", result);
           databaseRef.push(result);
         },
         (error) => {
-          setisLoading(false);
+          setUploadFileLoading(false);
           console.log("Error:", error);
         }
       )
       .catch((error) => {
-        setisLoading(false);
+        setUploadFileLoading(false);
         console.error("Error:", error);
       });
   }
 
   return (
     <>
-    <div style={{display: 'flex', margin: '25px', justifyContent: 'flex-start', border: '1px solid black', padding: '25px', flexDirection: 'column', borderRadius: '12px'}}>
+    <div className={classes.uploadContainer} >
       <div>Upload New File Here (Pdf Format Only)</div>
       <div>
-        <RadioGroup style={{display: 'flex', flexDirection: 'row'}} value={type} onChange={handleType}>
+        <RadioGroup className={classes.uploadRadioBtn} value={type} onChange={handleType}>
           <FormControlLabel
             value="1"
             control={<Radio />}
@@ -87,8 +90,8 @@ export default function UploadFile(props) {
       <div>
       <label>
         <input
-          disabled={isLoading}
-          style={{ marginBottom: "15px" }}
+        className={classes.uploadInputBtn}
+          // disabled={isLoading}
           type="file"
           accept=".pdf"
           onChange={handleChange}
@@ -97,35 +100,23 @@ export default function UploadFile(props) {
       </div>
       <div>
         <Button
-          disabled={isLoading}
+        className={classes.uploadBtn}
+          // disabled={isLoading}
           component="span"
-          style={{
-            width: "250px",
-            height: "50px",
-            background: "#3254CB",
-            boxShadow: "4px 4px 8px #B7C7FF",
-            borderRadius: "10px",
-            color: "#FFFFFF",
-          }}
           onClick={handleUpload}
         >
-          {isLoading ? (
-            <>
-              <span>Uploading...</span>
-            </>
-          ) : (
             <>
               <CloudUploadIcon
-                style={{ marginRight: "10px", marginTop: "5px" }}
+                className={classes.cloudIcon}
               />
               <span>UPLOAD</span>
             </>
-          )}
         </Button>
       </div>
     </div>
     <TableContent
         data={uploadedFiles}
+        setEditDetailLoading={setEditDetailLoading}
       />
       </>
   );

@@ -50,14 +50,14 @@ export default function EditDetail(props) {
             {pageIndex === 0 && fileType === "1" && <h3>Details of your account transaction</h3>}
             {pageIndex === 0 && fileType === "2" && <h3>Payments & Credits</h3>}
             {pageIndex === 1 && fileType === "2" && <h3>Purchases & Returns</h3>}
-            <div style={{ padding: "25px" }}>
+            <div className={classes.editContainer}>
               <Table
                 key={pageIndex}
                 className={classes.table}
                 aria-label="simple table"
               >
                 <TableHead>
-                  <TableRow style={{ background: "#E8EDFF" }}>
+                  <TableRow className={classes.editRow}>
                     {pageData.header.map((datum, index) => (
                       <TableCell key={index} align="center">
                         {datum.title}
@@ -96,21 +96,10 @@ export default function EditDetail(props) {
           </>
         );
       })}
-      <div
-        style={{
-          position: "sticky",
-          display: "flex",
-          justifyContent: "flex-end",
-          background: "#f4f4f4",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: "70px",
-          padding: "15px",
-        }}
+      <div className={classes.dashboardSaveCancel}
       >
-        <Button
-          style={{ marginRight: "15px" }}
+        <Button 
+          className={classes.editCancel}
           onClick={goBack}
           variant="outlined"
           color="primary"

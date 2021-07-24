@@ -3,8 +3,10 @@ import TextField from "@material-ui/core/TextField";
 import { Button } from "@material-ui/core";
 import { useState } from "react";
 import { database } from "../Firebase";
+import { dashboardStyles } from "./style";
 
 export default function InputBox() {
+  const classes = dashboardStyles();
   const [text, setText] = useState("");
 
   function handleText(value) {
@@ -27,7 +29,7 @@ export default function InputBox() {
 
   return (
     <div>
-      <div style={{ marginTop: "25px" }}>
+      <div className={classes.inputChange}>
         <TextField
           label="First Name"
           variant="outlined"
@@ -38,7 +40,7 @@ export default function InputBox() {
           }}
         />
       </div>
-      <div style={{ marginTop: "15px" }}>
+      <div className={classes.inputSubmit}>
         <Button variant="contained" color="primary" onClick={handleSubmit}>
           Submit
         </Button>
