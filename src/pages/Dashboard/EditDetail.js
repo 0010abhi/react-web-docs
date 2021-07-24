@@ -44,6 +44,10 @@ export default function EditDetail(props) {
     //     }
     //   })
   }
+  function handleChange(key, index, value) {
+    // parserData[index].key = 
+
+  }
 
   // update edited data to firebase object
   return (
@@ -71,6 +75,7 @@ export default function EditDetail(props) {
                     {headerIndex > 1 ? (
                       <TextField
                         // label="Outlined"
+                        onChange={(e) => {handleChange(headerDatum.key, index, e.target.value)}}
                         value={datum[headerDatum.key]}
                         variant="outlined"
                       />
