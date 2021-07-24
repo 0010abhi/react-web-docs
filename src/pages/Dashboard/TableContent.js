@@ -33,7 +33,7 @@ export default function TableContent(props) {
    */
   function editDetails(data, firebaseUniqueKey) {
     // ng_rok_url
-    let URL = "http://127.0.0.1:5000/";
+    let URL = "https://464b4e3a3986.ngrok.io/";
     // conditional end point based on file type by value
     if (data.fileType === "1") {
       URL += "parser-type-one";

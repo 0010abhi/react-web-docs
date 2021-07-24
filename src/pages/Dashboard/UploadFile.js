@@ -39,7 +39,7 @@ export default function UploadFile(props) {
     const formData = new FormData();
     formData.append("report_file", pdfAsFile);
 
-    fetch("http://127.0.0.1:5000//upload/" + type, {
+    fetch("https://464b4e3a3986.ngrok.io/upload/" + type, {
       method: "POST",
       body: formData,
       headers: {

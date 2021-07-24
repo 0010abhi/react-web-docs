@@ -22,7 +22,7 @@ export default function EditDetail(props) {
   const history = useHistory();
   const databaseRef = database.ref("/" + props.match.params.id);
   const [parserData, setParserData] = useState(props.location.state.data[0]);
-
+  console.log('Parser Data', parserData);
   function goBack() {
     history.goBack();
   }
@@ -45,50 +45,56 @@ export default function EditDetail(props) {
     //   })
   }
   function handleChange(key, index, value) {
-    // parserData[index].key = 
-
+    // parserData[index].key =
   }
 
   // update edited data to firebase object
   return (
     <div>
       <h3>Edit Detail</h3>
-      <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="simple table">
-          <TableHead>
-            <div style={{ marginTop: "20px", marginBottom: "20px" }}>
-              Recent Uploaded Files
-            </div>
-            <TableRow style={{ background: "#E8EDFF" }}>
-              {parserData.header.map((datum, index) => (
-                <TableCell key={index} align="center">
-                  {datum.title}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {parserData.body.map((datum, index) => (
-              <TableRow key={index}>
-                {parserData.header.map((headerDatum, headerIndex) => (
-                  <TableCell key={headerIndex} align="center">
-                    {headerIndex > 1 ? (
-                      <TextField
-                        // label="Outlined"
-                        onChange={(e) => {handleChange(headerDatum.key, index, e.target.value)}}
-                        value={datum[headerDatum.key]}
-                        variant="outlined"
-                      />
-                    ) : (
-                      <span>{datum[headerDatum.key]}</span>
-                    )}
-                  </TableCell>
+      {/* <TableContainer component={Paper}> */}
+        {parserData.data.map((pageData, pageIndex) => {
+          return (
+            <Table key={pageIndex} className={classes.table} aria-label="simple table">
+              <TableHead>
+                <TableRow style={{ background: "#E8EDFF" }}>
+                  {pageData.header.map((datum, index) => (
+                    <TableCell key={index} align="center">
+                      {datum.title}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {pageData.body.map((datum, index) => (
+                  <TableRow key={index}>
+                    {pageData.header.map((headerDatum, headerIndex) => (
+                      <TableCell key={headerIndex} align="center">
+                        {headerIndex > 1 ? (
+                          <TextField
+                            // label="Outlined"
+                            onChange={(e) => {
+                              handleChange(
+                                headerDatum.key,
+                                index,
+                                e.target.value
+                              );
+                            }}
+                            value={datum[headerDatum.key]}
+                            variant="outlined"
+                          />
+                        ) : (
+                          <span>{datum[headerDatum.key]}</span>
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
                 ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+              </TableBody>
+            </Table>
+          );
+        })}
+      {/* </TableContainer> */}
       <div>
         <Button onClick={goBack} variant="outlined" color="primary">
           Cancel
