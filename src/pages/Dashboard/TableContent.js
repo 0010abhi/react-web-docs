@@ -27,7 +27,7 @@ export default function TableContent(props) {
   function editDetails(data, firebaseUniqueKey) {
     // ng_rok_url
     setEditDetailLoading(true);
-    let URL = "https://364e5c6ae474.ngrok.io/";
+    let URL = "https://warm-abacus-319311.uc.r.appspot.com/";
     // conditional end point based on file type by value
     if (data.fileType === "1") {
       URL += "parser-type-one";

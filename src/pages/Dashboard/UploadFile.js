@@ -41,7 +41,7 @@ export default function UploadFile(props) {
     const formData = new FormData();
     formData.append("report_file", pdfAsFile);
 
-    fetch("https://364e5c6ae474.ngrok.io/upload/" + type, {
+    fetch("https://warm-abacus-319311.uc.r.appspot.com/upload/" + type, {
       method: "POST",
       body: formData,
       headers: {

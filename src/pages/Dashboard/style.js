@@ -6,7 +6,7 @@ export const dashboardStyles = makeStyles((theme)=>({
     marginBottom: "12px",
   },
   backdrop: {
-    zIndex: theme.zIndex.drawer + 1,
+    zIndex: 999,
     color: '#fff',
   },
   dashboardContainer: {
