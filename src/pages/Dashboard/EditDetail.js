@@ -13,31 +13,46 @@ import { dashboardStyles } from "./style";
 export default function EditDetail(props) {
   const classes = dashboardStyles();
   const history = useHistory();
-  const databaseRef = database.ref("/" + props.match.params.id);
-  const [parserData,] = useState(props.location.state.data[0]);
-  const [fileType,] = useState(props.location.state.fileType);
+  const firebaseUniqueId = props.match.params.id;
+  const databaseRef = database.ref("/");
+  const [parserData, setParserData] = useState(props.location.state.data[0]);
+  const [fileType] = useState(props.location.state.fileType);
 
   function goBack() {
     history.goBack();
   }
 
   function updateDatabase() {
-    databaseRef.on("value", (snapshot) => {
-      const data = snapshot.val();
-      console.log("editdetail", data);
+    databaseRef.child(firebaseUniqueId).update({
+      updatedData: parserData,
+    }, (error) => {
+      if(error){
+        console.log('console.error();', error);
+      } else {
+        console.log('success');
+      }
+    }).catch(err => {
+      console.error(err);
     });
   }
 
   function handleChange(key, index, value, tableIndex) {
-    console.log('parser data', parserData);
-    const bodyData = parserData.data[tableIndex].body;
-    console.log('key, index, value', key, index, value, tableIndex);
-    let bodyRowData = bodyData[index];
-    bodyRowData = {
-      ...bodyRowData,
-      [key]: value
-    }
-    console.log('bodyRowData', bodyRowData);
+    let bodyData = [...parserData.data[tableIndex].body];
+    bodyData[index] = {
+      ...bodyData[index],
+      [key]: value,
+    };
+    const tempDataRender = [...parserData.data];
+    tempDataRender[tableIndex] = {
+      ...tempDataRender[tableIndex],
+      body: bodyData,
+    };
+    let tempData = parserData;
+    tempData = {
+      ...tempData,
+      data: tempDataRender,
+    };
+    setParserData(tempData);
   }
 
   // update edited data to firebase object
@@ -47,9 +62,13 @@ export default function EditDetail(props) {
       {parserData.data.map((pageData, pageIndex) => {
         return (
           <>
-            {pageIndex === 0 && fileType === "1" && <h3>Details of your account transaction</h3>}
+            {pageIndex === 0 && fileType === "1" && (
+              <h3>Details of your account transaction</h3>
+            )}
             {pageIndex === 0 && fileType === "2" && <h3>Payments & Credits</h3>}
-            {pageIndex === 1 && fileType === "2" && <h3>Purchases & Returns</h3>}
+            {pageIndex === 1 && fileType === "2" && (
+              <h3>Purchases & Returns</h3>
+            )}
             <div className={classes.editContainer}>
               <Table
                 key={pageIndex}
@@ -96,9 +115,8 @@ export default function EditDetail(props) {
           </>
         );
       })}
-      <div className={classes.dashboardSaveCancel}
-      >
-        <Button 
+      <div className={classes.dashboardSaveCancel}>
+        <Button
           className={classes.editCancel}
           onClick={goBack}
           variant="outlined"

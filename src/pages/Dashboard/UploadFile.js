@@ -11,9 +11,9 @@ import { dashboardStyles } from "./style";
 export default function UploadFile(props) {
   const {setUploadFileLoading, setEditDetailLoading} = props;
   const classes = dashboardStyles();
-  const [pdfAsFile, setPdfAsFile] = useState("");
+  const [pdfAsFile, setPdfAsFile] = useState({});
   // const [isLoading, setUploadFileLoading] = useState(false);
-  const [type, setType] = useState("");
+  const [type, setType] = useState('1');
   const [uploadedFiles, setUploadedFiles] = useState({});
   const databaseRef = database.ref("/");
 
@@ -36,37 +36,44 @@ export default function UploadFile(props) {
 
   //connection with firebase storage after click on upload button pdf pass
   function handleUpload() {
-    setUploadFileLoading(true);
+    console.log('pdfAsFile', pdfAsFile);
+    if(pdfAsFile.type){
+      setUploadFileLoading(true);
 
-    const formData = new FormData();
-    formData.append("report_file", pdfAsFile);
-
-    fetch("https://warm-abacus-319311.uc.r.appspot.com/upload/" + type, {
-      method: "POST",
-      body: formData,
-      headers: {
-        mode: "no-cors",
-      },
-    })
-      .then((response) => {
-        console.log("response pre block", response);
-        return response.json();
-      })
-      .then(
-        (result) => {
-          setUploadFileLoading(false);
-          console.log("Success:", result);
-          databaseRef.push(result);
+      const formData = new FormData();
+      formData.append("report_file", pdfAsFile);
+  
+      fetch("https://warm-abacus-319311.uc.r.appspot.com/upload/" + type, {
+        method: "POST",
+        body: formData,
+        headers: {
+          mode: "no-cors",
         },
-        (error) => {
+      })
+        .then((response) => {
+          console.log("response pre block", response);
+          return response.json();
+        })
+        .then(
+          (result) => {
+            setUploadFileLoading(false);
+            setPdfAsFile({});
+            console.log("Success:", result);
+            databaseRef.push(result);
+          },
+          (error) => {
+            setUploadFileLoading(false);
+            alert("Error: File Not Uploaded");
+          }
+        )
+        .catch((error) => {
           setUploadFileLoading(false);
-          console.log("Error:", error);
-        }
-      )
-      .catch((error) => {
-        setUploadFileLoading(false);
-        console.error("Error:", error);
-      });
+          alert("Catch Error: File Not Uploaded");
+        });
+    } else {
+      alert("Please select file");
+    }
+    
   }
 
   return (

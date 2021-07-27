@@ -9,11 +9,13 @@ import Paper from "@material-ui/core/Paper";
 import { Button } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { dashboardStyles } from "./style";
+import { database } from "../Firebase";
 
 export default function TableContent(props) {
   const classes = dashboardStyles();
   const history = useHistory();
-  const {setEditDetailLoading}= props;
+  const { setEditDetailLoading } = props;
+  const databaseRef = database.ref("/");
 
   function openPdf(url) {
     window.open(url);
@@ -26,8 +28,14 @@ export default function TableContent(props) {
    */
   function editDetails(data, firebaseUniqueKey) {
     // ng_rok_url
-    setEditDetailLoading(true);
-    let URL = "https://warm-abacus-319311.uc.r.appspot.com/";
+    if(data.updatedData){
+      history.push(`/edit-detail/${firebaseUniqueKey}`, {
+        data: [{...data.updatedData}],
+        fileType: data.fileType,
+      });
+    } else {
+      setEditDetailLoading(true);
+      let URL = "https://warm-abacus-319311.uc.r.appspot.com/";
     // conditional end point based on file type by value
     if (data.fileType === "1") {
       URL += "parser-type-one";
@@ -35,7 +43,6 @@ export default function TableContent(props) {
       URL += "parser-type-two";
     }
 
-    //
     fetch(URL, {
       method: "POST",
       body: JSON.stringify({ gcsUrl: data.gcsUrl }),
@@ -51,14 +58,27 @@ export default function TableContent(props) {
       .then(
         (result) => {
           setEditDetailLoading(false);
-          console.log("Success:", result);
-          // setEditDetailData(result)
-          history.push(`/edit-detail/${firebaseUniqueKey}`, {
-            data: result,
-            fileType: data.fileType,
-          });
-          // Update Database with parser
-          //originalData: originalData
+          // Update Database with parser originalData
+          databaseRef
+            .child(firebaseUniqueKey)
+            .update(
+              {
+                originalData: result,
+              },
+              (error) => {
+                if (error) {
+                  console.log("error", error);
+                } else {
+                  history.push(`/edit-detail/${firebaseUniqueKey}`, {
+                    data: result,
+                    fileType: data.fileType,
+                  });
+                }
+              }
+            )
+            .catch((err) => {
+              console.log("cathc error", err);
+            });
         },
         (error) => {
           setEditDetailLoading(false);
@@ -69,14 +89,14 @@ export default function TableContent(props) {
         setEditDetailLoading(false);
         console.error("Error:", error);
       });
+    }
+    
   }
 
   return (
-    <div
-    className={classes.tableMain}
-    >
+    <div className={classes.tableMain}>
       <TableContainer component={Paper}>
-        <div className={classes.tableContainer} >Recent Uploaded Files</div>
+        <div className={classes.tableContainer}>Recent Uploaded Files</div>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow className={classes.tableRowHeader}>

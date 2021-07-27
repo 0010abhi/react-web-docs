@@ -21,8 +21,8 @@ export const dashboardStyles = makeStyles((theme)=>({
     bottom: 0,
     left: 0,
     right: 0,
-    height: "70px",
-    padding: "15px",
+    height: "50px",
+    padding: "25px",
   },
   editCancel: {
     marginRight: "15px",
