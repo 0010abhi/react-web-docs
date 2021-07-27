@@ -9,6 +9,8 @@ import TableRow from "@material-ui/core/TableRow";
 import TextField from "@material-ui/core/TextField";
 import { useHistory } from "react-router-dom";
 import { dashboardStyles } from "./style";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Backdrop from '@material-ui/core/Backdrop';
 
 export default function EditDetail(props) {
   const classes = dashboardStyles();
@@ -17,12 +19,14 @@ export default function EditDetail(props) {
   const databaseRef = database.ref("/");
   const [parserData, setParserData] = useState(props.location.state.data[0]);
   const [fileType] = useState(props.location.state.fileType);
+  const [saveFileLoading, setSaveFileLoading] = useState(false);
 
   function goBack() {
     history.goBack();
   }
 
   function updateDatabase() {
+    setSaveFileLoading(true);
     databaseRef.child(firebaseUniqueId).update({
       updatedData: parserData,
     }, (error) => {
@@ -31,7 +35,9 @@ export default function EditDetail(props) {
       } else {
         console.log('success');
       }
+      setSaveFileLoading(false);
     }).catch(err => {
+      setSaveFileLoading(false);
       console.error(err);
     });
   }
@@ -60,6 +66,7 @@ export default function EditDetail(props) {
     <div className={classes.dashboardContainer}>
       <h2>Edit Detail</h2>
       {parserData.data.map((pageData, pageIndex) => {
+        // console.log('pagedata',pageData)
         return (
           <>
             {pageIndex === 0 && fileType === "1" && (
@@ -127,6 +134,9 @@ export default function EditDetail(props) {
         <Button onClick={updateDatabase} variant="contained" color="primary">
           Save
         </Button>
+        <Backdrop className={classes.backdrop} open={saveFileLoading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
       </div>
     </div>
   );
